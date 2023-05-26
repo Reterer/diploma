@@ -29,16 +29,15 @@
                 <div v-for="item in items" :key="'item_div_' + item.id" class="tab-pane fade container"
                     :class="{ 'active show': isActive(item.id) }" :id="'item_div_' + item.id">
                     <!-- {{ item.answer }} -->
-                    <div>
-                        <h4>Вопрос:</h4>
-                        {{ item.question }}
+                    <div v-html="item.question">
                     </div>
-                    <h4>Варианты ответа:</h4>
-                    <div class="form-check" v-for="check in item.checks">
-                        <input class="form-check-input" type="checkbox" :value="check.id" v-model="item.answer">
-                        <label class="form-check-label">
-                            {{ check.text }}
-                        </label>
+                    <div>
+                        <div class="form-check" v-for="check in item.checks">
+                            <input class="form-check-input" type="checkbox" :value="check.id" v-model="item.answer">
+                            <label class="form-check-label">
+                                {{ check.text }}
+                            </label>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -59,31 +58,35 @@ export default {
             test: {
                 id: '1',
                 name: "Тест 1",
-                left_time: "13:45",
+                left_time: "58:45",
             },
             activeItem: '1',
             items: [
                 {
                     id: '1',
                     short_name: "1",
-                    question: "Текстовая форма вопроса",
+                    question: "Даны высказывания:<br>1) То, что N делится на 15, есть необходимое условие того, чтобы N делилось на 3.<br>2) То, что N не делится на 3, влечёт то, что N не делится на 15.<br>3) N делится на 3 при условии, что N делится на 15.<br>4) N не делится на 3 только тогда, когда N не делится на 15.<br>5) N делится на 3 тогда и только тогда, когда N делится на 15.<br>Какие из них следуют из высказывания N делится на 15, то N делится на 3?<br>",
                     checks: [
                         {
                             id: "0",
-                            text: "Первый ответ"
+                            text: "1"
                         },
                         {
                             id: "1",
-                            text: "Второй ответ"
+                            text: "2"
                         },
                         {
                             id: "2",
-                            text: "Третий ответ"
+                            text: "3"
                         },
                         {
                             id: "3",
-                            text: "Четвертый ответ"
+                            text: "4"
                         },
+                        {
+                            id: "4",
+                            text: "5"
+                        }
                     ],
                     answer: [],
                 },

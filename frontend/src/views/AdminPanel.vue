@@ -61,6 +61,31 @@
 
                 <!-- Modal -->
                 <!-- Scrollable modal -->
+                <div class="modal" tabindex="-1" id="createInstance" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Создание экземпляра</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="datepicker-container">
+                                    <label for="date" class="form-label">Время начала:</label><br>
+                                    <input type="date" name="date">
+                                </div>
+                                <label for=" date" class="form-label">Длительность:</label>
+                                <div class="cs-form">
+                                    <input type="time" class="form-control" value="10:05 AM" />
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                <button type="button" class="btn btn-primary">Создать</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Scrollable modal -->
                 <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
@@ -78,7 +103,12 @@
                                         <h5 class="card-header">Блок задач 1</h5>
                                         <div class="card-body">
                                             <h5 class="card-title">Генератор</h5>
-                                            <p class="card-text">Какие-то настройки генератора</p>
+                                            <div class="mb-3">
+                                                <label for="formFile" class="form-label">Json настройки
+                                                    генератора:</label>
+                                                <input class="form-control" type="file" id="formFile">
+                                            </div>
+                                            <button type="button" class="btn btn-sm btn-danger m-1">Удалить</button>
                                         </div>
                                     </div>
                                 </div>
@@ -97,7 +127,8 @@
                         v-for="template in templates" :key="'template_' + template.id">
                         <span>{{ template.name }}</span>
                         <div>
-                            <button type="button" class="btn btn-sm btn-success m-1">Запустить</button>
+                            <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal"
+                                data-bs-target="#createInstance">Запустить</button>
                             <!-- <button type="button" class="btn btn-sm btn-primary m-1">Изменить</button> -->
                             <button type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
@@ -142,18 +173,18 @@ export default {
                 {
                     id: "1",
                     name: "Тест 1",
-                    status: "Завершен",
-                    start: "23:23:15 19.04.2023",
-                    end: "00:23:15 20.04.2023",
+                    status: "Запущен",
+                    start: "01:40:00 20.04.2023",
+                    end: "0     2:40:00 20.04.2023",
                     duration: "1:00:00",
                 },
                 {
                     id: "2",
                     name: "Тест 2",
-                    status: "Запущен",
-                    start: "00:00:00 20.04.2023",
-                    end: "1:30:00 20.04.2023",
-                    duration: "40:35",
+                    status: "Завершен",
+                    start: "00:00:00 20.05.2023",
+                    end: "01:30:00 20.05.2023",
+                    duration: "1:30:00",
                 }
             ],
             templates: [
@@ -161,14 +192,14 @@ export default {
                     id: "1",
                     name: "Тест 1",
                 },
-                {
-                    id: "2",
-                    name: "Тест 2",
-                },
-                {
-                    id: "3",
-                    name: "Тест 3",
-                }
+                // {
+                //     id: "2",
+                //     name: "Тест 2",
+                // },
+                // {
+                //     id: "3",
+                //     name: "Тест 3",
+                // }
             ],
             generators: [
                 {
