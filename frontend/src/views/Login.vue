@@ -1,14 +1,14 @@
 <template>
   <main class="form-signin w-100 m-auto">
-    <form>
-      <h1 class="h4 mb-3 fw-normal">Вход для преподавателей</h1>
+    <form @submit.prevent="login">
+      <h1 class="h4 mb-3 fw-normal">Вход</h1>
 
       <div class="form-floating mb-3">
-        <input type="username" class="form-control" id="floatingInput" placeholder="name@example.com">
+        <input v-model="username" type="username" class="form-control" id="floatingInput" placeholder="name@example.com">
         <label for="floatingInput">Имя пользователя</label>
       </div>
       <div class="form-floating mb-3">
-        <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+        <input v-model="password" type="password" class="form-control" id="floatingPassword" placeholder="Password">
         <label for="floatingPassword">Пароль</label>
       </div>
 
@@ -22,7 +22,28 @@
   </main>
 </template>
 
-<script setup>
+<script>
+import axios from 'axios'
+
+export default {
+  data() {
+    return {
+      username: "",
+      password: "",
+    }
+  },
+  methods: {
+    login() {
+      axios.post('/token', { username: this.username, password: this.password })
+        .then(res => {
+          // do something with res
+          console.log(res.data)
+          localStorage.setItem('access_token', res.data.access_token)
+        })
+        .catch(err => {/* catch error */ });
+    },
+  }
+}
 </script>
 
 

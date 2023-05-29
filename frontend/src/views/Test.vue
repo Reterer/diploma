@@ -28,17 +28,7 @@
             <div class="tab-content py-3" id="myTabContent">
                 <div v-for="item in items" :key="'item_div_' + item.id" class="tab-pane fade container"
                     :class="{ 'active show': isActive(item.id) }" :id="'item_div_' + item.id">
-                    <!-- {{ item.answer }} -->
-                    <div v-html="item.question">
-                    </div>
-                    <div>
-                        <div class="form-check" v-for="check in item.checks">
-                            <input class="form-check-input" type="checkbox" :value="check.id" v-model="item.answer">
-                            <label class="form-check-label">
-                                {{ check.text }}
-                            </label>
-                        </div>
-                    </div>
+                    <Sample :item="item" />
                 </div>
             </div>
         </div>
@@ -47,8 +37,12 @@
 
 <script>
 import { compile } from 'vue';
+import Sample from '../components/generators/sample.vue'
 
 export default {
+    components: {
+        Sample,
+    },
     data() {
         return {
             user: {
