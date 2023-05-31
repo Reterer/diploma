@@ -109,18 +109,24 @@ class Instance(Base):
     id = Column(Integer, primary_key=True)
     template_id = Column(Integer, ForeignKey("templates.id"))
     name = Column(String, nullable=False)
-    url = Column(String, nullable=False)
+    url = Column(String)
     start_time = Column(DateTime, nullable=False)
     end_time = Column(DateTime, nullable=False)
 
 
 def get_instances_by_user(user: User):
-    res = session.query(Instance, Template).join(Template).all()
+    res = (
+        session.query(Instance, Template)
+        .join(Template)
+        .filter(Template.user_id == user.id)
+        .all()
+    )
     return list(map(lambda x: x[0], res))
 
 
-def create_instance(template: Template, instance: Instance):
-    pass
+def create_instance(instance: Instance):
+    session.add(instance)
+    session.commit()
 
 
 # Определяем модель InstanceTasks

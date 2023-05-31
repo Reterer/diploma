@@ -6,11 +6,13 @@ import App from './App.vue'
 import router from './router'
 import axios from 'axios'
 
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 // import VueTreeList from 'vue-tree-list'
 
 const app = createApp(App)
-
 app.use(router)
+app.component('VueDatePicker', VueDatePicker)
 // app.use(VueTreeList)
 app.mount('#app')
 

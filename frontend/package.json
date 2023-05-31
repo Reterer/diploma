@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^5.1.2",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "vue": "^3.3.2",
@@ -15,6 +16,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.2.3",
-    "vite": "^4.3.5"
+    "vite": "^4.3.9"
   }
 }

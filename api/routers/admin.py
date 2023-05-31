@@ -94,16 +94,59 @@ async def delete_templates_id(template_id: int):
 
 # INSTANCES -----------------------------
 
+from datetime import datetime, timedelta
 
-@router.get("/instances")
+
+class GetInstance(BaseModel):
+    id: int
+    template_id: int
+    name: str
+    start: datetime
+    end: datetime
+    duration: timedelta
+
+
+def convert_instance_to_get_instance(instance: db.Instance) -> GetInstance:
+    start = instance.start_time
+    end = instance.end_time
+    duration = end - start
+
+    get_instance = GetInstance(
+        id=instance.id,
+        template_id=instance.template_id,
+        name=instance.name,
+        start=start,
+        end=end,
+        duration=duration,
+    )
+
+    return get_instance
+
+
+@router.get("/instances", response_model=List[GetInstance])
 async def get_instances():
     # Получить список экземпляров тестов
-    return {}
+    instances = db.get_instances_by_user(user)
+    return list(map(convert_instance_to_get_instance, instances))
+
+
+class PostInstance(BaseModel):
+    name: str
+    template_id: int
+    start_time: datetime
+    duration: int
 
 
 @router.post("/instances")
-async def post_instances():
+async def post_instances(post_instance: PostInstance):
     # Создание нового экземпляра
+    instnace = db.Instance(
+        name=post_instance.name,
+        template_id=post_instance.template_id,
+        start_time=post_instance.start_time,
+        end_time=post_instance.start_time + timedelta(minutes=post_instance.duration),
+    )
+    db.create_instance(instnace)
     return {}
 
 

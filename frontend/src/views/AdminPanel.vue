@@ -70,17 +70,23 @@
                             </div>
                             <div class="modal-body">
                                 <div class="datepicker-container">
+                                    <input v-model="new_instance.name" type="text" class="form-control mb-3"
+                                        id="floatingInput" placeholder="Название экземпляра">
+
                                     <label for="date" class="form-label">Время начала:</label><br>
-                                    <input type="date" name="date">
+                                    <VueDatePicker v-model="new_instance.start_time"></VueDatePicker>
+                                    <!-- <input type="date" name="date" v-model="new_instance.start_time"> -->
                                 </div>
                                 <label for=" date" class="form-label">Длительность:</label>
                                 <div class="cs-form">
-                                    <input type="time" class="form-control" value="10:05 AM" />
+                                    <input type="time" class="form-control" v-model="new_instance.duration" />
                                 </div>
+                                {{ new_instance }}
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                                <button type="button" class="btn btn-primary">Создать</button>
+                                <button type="button" class="btn btn-primary" @click="createInstance"
+                                    data-bs-dismiss="modal">Создать</button>
                             </div>
                         </div>
                     </div>
@@ -147,7 +153,8 @@
                         <span>{{ template.name }}</span>
                         <div>
                             <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal"
-                                data-bs-target="#createInstance">Запустить</button>
+                                data-bs-target="#createInstance"
+                                v-on:click="new_instance.template_id = template.id">Запустить</button>
                             <!-- <button type="button" class="btn btn-sm btn-primary m-1">Изменить</button> -->
                             <button type="button" class="btn btn-primary btn-sm m-1" data-bs-toggle="modal"
                                 data-bs-target="#exampleModal">
@@ -221,6 +228,12 @@ export default {
                 //     name: "Тест 3",
                 // }
             ],
+            generators: [
+                {
+                    id: 0,
+                    name: "Текстовый генератор",
+                }
+            ],
             new_template: {
                 name: "",
                 blocks: [
@@ -232,12 +245,12 @@ export default {
                     }
                 ]
             },
-            generators: [
-                {
-                    id: 0,
-                    name: "Текстовый генератор",
-                }
-            ]
+            new_instance: {
+                name: "",
+                template_id: 0,
+                start_time: 0,
+                duration: 0,
+            }
         }
     },
     methods: {
@@ -246,11 +259,10 @@ export default {
                 .get('/admin/templates')
                 .then(response => { this.templates = response.data; console.log(response.data) });
         },
-        post_template() {
-
-        },
-        get_template_blocks() {
-
+        get_instances() {
+            axios
+                .get('/admin/instances')
+                .then(response => { this.instances = response.data; console.log(response.data) });
         },
 
         createTemplateRemoveBlock(block) {
@@ -287,14 +299,30 @@ export default {
             // Запрос
             axios.post('/admin/templates', this.new_template)
                 .then(res => {
-                    console.log(res)
+                    console.log(res);
+                    // А потом сбросить new_template
+                    this.new_template = {}
                 })
-            // А потом сбросить new_template
-
+        },
+        createInstance() {
+            // Нужно перевести duration из HH:MM в минуты
+            var parts = this.new_instance.duration.split(":");
+            var hours = parseInt(parts[0]);
+            var minutes = parseInt(parts[1]);
+            // Затем нужно заменть duration
+            this.new_instance.duration = hours * 60 + minutes;
+            // Теперь это все можно отправлять на сервер
+            axios.post('/admin/instances', this.new_instance)
+                .then(res => {
+                    console.log(res);
+                    // А потом сбросить new_template
+                    this.new_instance = {}
+                })
         },
     },
     beforeMount() {
-        this.get_templates()
+        this.get_templates();
+        this.get_instances();
     }
 }
 </script>
