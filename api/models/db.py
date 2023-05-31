@@ -143,12 +143,83 @@ class InstanceTask(Base):
     answer_data = Column(String, nullable=False)
 
 
+from datetime import datetime
+
+
+class Test(BaseModel):
+    id: int
+    name: str
+    start_time: datetime
+    end_time: datetime
+
+
+# test_id == instance_id Ну или пока так
+def get_test(instance_id: int):
+    info = session.query(Instance).filter(Instance.id == instance_id).first()
+    return Test(
+        id=info.id, name=info.name, start_time=info.start_time, end_time=info.end_time
+    )
+
+
+import generators
+import json
+
+
+def generate_tasks(block: TemplateTaskBlock):
+    # Как это происходит. У нас есть список генераторов.
+    gen = generators.GENERATOR_LIST[block.generator_id]
+    # Парсинг текстового json в dict
+    config = json.loads(block.config)
+    # Непосредственно сама генерация задач
+    public, secret = gen.generate_tasks(config)
+
+    return public, secret
+
+
+# TODO может быть потом переместить от сюда функцию
 def create_tasks(user: User, instance_id: int):
+    # Самая важная функция..
+    # Мы попадаем сюда, если у пользователя нет задач
+    instance = session.query(Instance).filter(Instance.id == instance_id).first()
+    # Нужно найти блоки задач
+    blokcs = get_template_blocks_by_template_id(instance.template_id)
+    # Нужно сгенерировать задачи
+    instance_tasks = []
+    num = 0
+    for block in blokcs:
+        public, secret = generate_tasks(block)
+        # Заполнение полей
+        tasks = [
+            InstanceTask(
+                instance_id=instance_id,
+                user_id=user.id,
+                template_task_block_id=block.id,
+                number=num + i,
+                public_data=json.dumps(public[i]),
+                secret_data=json.dumps(secret[i]),
+                answer_data="{}",
+            )
+            for i in range(len(public))
+        ]
+        num += len(tasks)
+        instance_tasks.extend(tasks)
+    # Закоммитить их
+    session.add(*instance_tasks)
+    session.commit()
+    # Фсе
     pass
 
 
-def get_task_list(user: User, instance_id: int):
-    pass
+def get_task_block_list(user: User, instance_id: int):
+    res = (
+        session.query(InstanceTask, TemplateTaskBlock)
+        .join(TemplateTaskBlock)
+        .filter(
+            InstanceTask.user_id == user.id and InstanceTask.instance_id == instance_id
+        )
+        .all()
+    )
+    return res
 
 
 def add_answer_task(user: User, instance_id: int, instance_task_id: int, answer: str):

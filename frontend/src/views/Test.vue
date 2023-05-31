@@ -38,6 +38,7 @@
 <script>
 import { compile } from 'vue';
 import Sample from '../components/generators/sample.vue'
+import axios from 'axios';
 
 export default {
     components: {
@@ -50,38 +51,23 @@ export default {
                 fullname: 'Суханов Егор Алексеевич',
             },
             test: {
-                id: '1',
-                name: "Тест 1",
-                left_time: "58:45",
             },
             activeItem: '1',
             items: [
                 {
                     id: '1',
                     short_name: "1",
-                    question: "Даны высказывания:<br>1) То, что N делится на 15, есть необходимое условие того, чтобы N делилось на 3.<br>2) То, что N не делится на 3, влечёт то, что N не делится на 15.<br>3) N делится на 3 при условии, что N делится на 15.<br>4) N не делится на 3 только тогда, когда N не делится на 15.<br>5) N делится на 3 тогда и только тогда, когда N делится на 15.<br>Какие из них следуют из высказывания N делится на 15, то N делится на 3?<br>",
-                    checks: [
-                        {
-                            id: "0",
-                            text: "1"
-                        },
-                        {
-                            id: "1",
-                            text: "2"
-                        },
-                        {
-                            id: "2",
-                            text: "3"
-                        },
-                        {
-                            id: "3",
-                            text: "4"
-                        },
-                        {
-                            id: "4",
-                            text: "5"
-                        }
-                    ],
+                    generator_id: 0,
+                    public_data: {
+                        question: "Даны высказывания:<br>1) То, что N делится на 15, есть необходимое условие того, чтобы N делилось на 3.<br>2) То, что N не делится на 3, влечёт то, что N не делится на 15.<br>3) N делится на 3 при условии, что N делится на 15.<br>4) N не делится на 3 только тогда, когда N не делится на 15.<br>5) N делится на 3 тогда и только тогда, когда N делится на 15.<br>Какие из них следуют из высказывания N делится на 15, то N делится на 3?<br>",
+                        checks: [
+                            { id: "1", text: "1" },
+                            { id: "2", text: "2" },
+                            { id: "3", text: "3" },
+                            { id: "4", text: "4" },
+                            { id: "5", text: "5" },
+                        ],
+                    },
                     answer: [],
                 },
                 {
@@ -108,7 +94,17 @@ export default {
         },
         setActive(menuItem) {
             this.activeItem = menuItem
-        }
+        },
+        getTasks() {
+            let test_id = this.$route.params.id
+            console.log(test_id)
+            axios
+                .get("/student/test/" + test_id)
+                .then(response => { this.test = response.data.test; this.items = response.data.items; console.log(response.data) });
+        },
+    },
+    beforeMount() {
+        this.getTasks();
     }
 }
 </script>

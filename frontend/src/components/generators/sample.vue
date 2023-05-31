@@ -1,9 +1,10 @@
 <template>
-    <div v-html="item.question">
+    <div v-html="item.public_data.question">
     </div>
     <div>
-        <div class="form-check" v-for="check in item.checks">
-            <input class="form-check-input" type="checkbox" :value="check.id" v-model="item.answer">
+        {{ item.answer }}
+        <div class="form-check" v-for="check in item.public_data.checks">
+            <input class="form-check-input" type="checkbox" :value="check.id" v-model="answer">
             <label class="form-check-label">
                 {{ check.text }}
             </label>
@@ -13,9 +14,14 @@
 
 <script>
 export default {
+    data() {
+        return {
+            answer: [],
+        }
+    },
     props: {
         item: Object,
-    },
+    }
 }
 </script>
 
