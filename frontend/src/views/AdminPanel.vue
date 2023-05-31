@@ -85,30 +85,47 @@
                         </div>
                     </div>
                 </div>
+
                 <!-- Scrollable modal -->
-                <div class="modal fade modal-xl" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
+                <div class="modal fade modal-xl" id="createTemplateModal" tabindex="-1"
+                    aria-labelledby="createTemplateModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Тест 1</h1>
+                                <h1 class="modal-title fs-5" id="createTemplateModalLabel">{{ new_template.name }}
+                                </h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="">
-                                <button type="button" class="btn btn-sm btn-secondary m-3">Добавить блок задач</button>
+                                <input v-model="new_template.name" type="text" class="form-control" id="floatingInput"
+                                    placeholder="Название шаблона">
+                                <button type="button" class="btn btn-sm btn-secondary m-3"
+                                    @click="createTemplateAddBlock()"> Добавить блок задач </button>
                             </div>
                             <div>
-                                <div class="modal-body">
-                                    <div class="card">
-                                        <h5 class="card-header">Блок задач 1</h5>
+                                <div class=" modal-body">
+                                    <div class="card" v-for=" block  in   new_template.blocks  "
+                                        :key="'block_' + block.block_number">
+                                        <h5 class="card-header">{{ block.name }}</h5>
                                         <div class="card-body">
-                                            <h5 class="card-title">Генератор</h5>
+                                            <input v-model="block.name" type="text" class="form-control mb-3"
+                                                id="floatingInput" placeholder="Название Группы заданий">
+                                            {{ block.selected }}
+                                            <select class="form-select mb-3" aria-label="Default select example"
+                                                v-model="block.selected">
+                                                <option selected>Выбрать генератор</option>
+                                                <option v-for=" generator  in  generators " :value="generator.id">{{
+                                                    generator.name }}</option>
+                                            </select>
                                             <div class="mb-3">
                                                 <label for="formFile" class="form-label">Json настройки
                                                     генератора:</label>
-                                                <input class="form-control" type="file" id="formFile">
+                                                <input class="form-control" type="file"
+                                                    @change="createtemplateReadFile($event.target.files[0], block)">
+                                                Текст для отладки: {{ block.config }}
                                             </div>
-                                            <button type="button" class="btn btn-sm btn-danger m-1">Удалить</button>
+                                            <button type="button" class="btn btn-sm btn-danger m-1"
+                                                @click="createTemplateRemoveBlock(block)">Удалить</button>
                                         </div>
                                     </div>
                                 </div>
@@ -116,15 +133,17 @@
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary btn-sm"
                                     data-bs-dismiss="modal">Закрыть</button>
-                                <button type="button" class="btn btn-primary btn-sm">Сохранить</button>
+                                <button type="button" class="btn btn-primary btn-sm" @click="createTemplateSave"
+                                    data-bs-dismiss="modal">Сохранить</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-sm btn-primary m-1">Создать тест</button>
+                <button type="button" class="btn btn-sm btn-primary m-1" data-bs-toggle="modal"
+                    data-bs-target="#createTemplateModal">Создать тест</button>
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center"
-                        v-for="template in templates" :key="'template_' + template.id">
+                        v-for="  template   in   templates  " :key="'template_' + template.id">
                         <span>{{ template.name }}</span>
                         <div>
                             <button type="button" class="btn btn-sm btn-success m-1" data-bs-toggle="modal"
@@ -146,7 +165,7 @@
                 <!-- Генераторы -->
                 <ul class="list-group">
                     <li class="list-group-item d-flex justify-content-between align-items-center"
-                        v-for="generator in generators" :key="'template_' + generator.id">
+                        v-for="  generator   in   generators  " :key="'template_' + generator.id">
                         <span>{{ generator.name }}</span>
                         <div>
                             <!-- <button type="button" class="btn btn-sm btn-danger m-1">Удалить</button> -->
@@ -162,6 +181,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
     data() {
         return {
@@ -175,7 +195,7 @@ export default {
                     name: "Тест 1",
                     status: "Запущен",
                     start: "01:40:00 20.04.2023",
-                    end: "0     2:40:00 20.04.2023",
+                    end: "02:40:00 20.04.2023",
                     duration: "1:00:00",
                 },
                 {
@@ -201,14 +221,81 @@ export default {
                 //     name: "Тест 3",
                 // }
             ],
+            new_template: {
+                name: "",
+                blocks: [
+                    {
+                        name: "",
+                        generator_id: 0,
+                        block_number: 0,
+                        config: "",
+                    }
+                ]
+            },
             generators: [
                 {
-                    id: "1",
+                    id: 0,
                     name: "Текстовый генератор",
                 }
             ]
         }
     },
+    methods: {
+        get_templates() {
+            axios
+                .get('/admin/templates')
+                .then(response => { this.templates = response.data; console.log(response.data) });
+        },
+        post_template() {
+
+        },
+        get_template_blocks() {
+
+        },
+
+        createTemplateRemoveBlock(block) {
+            let indexToRemove = this.new_template.blocks.findIndex(b => b.name === block.name);
+            this.new_template.blocks.splice(indexToRemove)
+        },
+        // TODO block_number изменить, там баг есть
+        createTemplateAddBlock() {
+            this.new_template.blocks.push({
+                name: "",
+                generator_id: 0,
+                block_number: this.new_template.blocks.length,
+                config: "",
+            })
+        },
+        createtemplateReadFile(file, block) {
+            // const file = file;
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                try {
+                    const content = JSON.parse(reader.result);
+                    console.log(content);
+                    // Ваш код для работы с содержимым JSON-файла
+                    block.config = JSON.stringify(content);
+                } catch (error) {
+                    console.error("Ошибка чтения JSON-файла:", error);
+                }
+            };
+
+            reader.readAsText(file);
+        },
+        createTemplateSave() {
+            // Запрос
+            axios.post('/admin/templates', this.new_template)
+                .then(res => {
+                    console.log(res)
+                })
+            // А потом сбросить new_template
+
+        },
+    },
+    beforeMount() {
+        this.get_templates()
+    }
 }
 </script>
 
