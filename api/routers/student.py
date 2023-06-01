@@ -10,7 +10,7 @@ router = APIRouter(
 
 # AUTH ----------------------------------
 # TODO нужно сделать норм авторизацию
-user = db.get_user("test1")
+user = db.get_user("test2")
 
 # TESTING -------------------------------
 
@@ -46,7 +46,7 @@ async def get_test(test_id: str):
         GetTest.Task(
             id=task.id,
             generator_id=block.generator_id,
-            short_name=task.number,
+            short_name=task.number + 1,
             public_data=json.loads(task.public_data),
         )
         for (task, block) in res
@@ -54,13 +54,18 @@ async def get_test(test_id: str):
     return GetTest(test=test, items=items)
 
 
-@router.get("/test/{test_id}/{task_id}")
-async def get_task(test_id: str, task_id: str):
-    # Получение описания задачи
-    return {}
+# @router.get("/test/{test_id}/{task_id}")
+# async def get_task(test_id: str, task_id: str):
+#     # Получение описания задачи
+#     return {}
+
+
+class PutTask(BaseModel):
+    answer: str
 
 
 @router.put("/test/{test_id}/{task_id}")
-async def put_task(test_id: str, task_id: str):
+async def put_task(test_id: str, task_id: str, putTask: PutTask):
     # Сохранение ответа на задачу
+    db.add_answer_task(user, task_id, putTask.answer)
     return {}

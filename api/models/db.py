@@ -95,7 +95,8 @@ def create_template_and_task_block(
     for i in range(len(template_task_blocks)):
         template_task_blocks[i].template_id = template.id
     print(template_task_blocks)
-    session.add(*template_task_blocks)
+    for block in template_task_blocks:
+        session.add(block)
     session.commit()
     # Затем готово
     print(template_task_blocks)
@@ -204,7 +205,8 @@ def create_tasks(user: User, instance_id: int):
         num += len(tasks)
         instance_tasks.extend(tasks)
     # Закоммитить их
-    session.add(*instance_tasks)
+    for task in instance_tasks:
+        session.add(task)
     session.commit()
     # Фсе
     pass
@@ -222,8 +224,52 @@ def get_task_block_list(user: User, instance_id: int):
     return res
 
 
-def add_answer_task(user: User, instance_id: int, instance_task_id: int, answer: str):
-    pass
+def add_answer_task(user: User, instance_task_id: int, answer: str):
+    (
+        session.query(InstanceTask)
+        .filter(InstanceTask.id == instance_task_id)
+        .update({InstanceTask.answer_data: answer})
+    )
+
+
+def check_task(task: InstanceTask):
+    return 0
+
+
+def gen_csv_table(instance_id: int):
+    # Нужно получить все задания.
+    res = (
+        session.query(InstanceTask, User)
+        .join(User)
+        .filter(InstanceTask.instance_id == instance_id)
+        .all()
+    )
+    # Cделать dict user: tasks
+    tasks_by_users = dict()
+    max_number = 0
+    # сделаем таблицу квадратную, потом ее в текст оформим
+    for task, user in res:
+        value = tasks_by_users.get(user.id, {"full_name": user.full_name, "tasks": []})
+        # Прогоняем задачу сразу через чекер
+        score = check_task(task)
+        value["tasks"].append((score, task.number))
+        if max_number < task.number:
+            max_number = task.number
+        tasks_by_users[user.id] = value
+    # Занести в таблицу.
+    table = [["user_id", "full_name"] + [str(i) for i in range(max_number + 1)]]
+    for user, value in tasks_by_users.items():
+        line = [str(user), value["full_name"]]
+        score_tasks = [0 for i in range(max_number + 1)]
+        for task in value["tasks"]:
+            print(task)
+            score_tasks[task[1]] = task[0]
+        line += list(map(str, score_tasks))
+        table.append(line)
+
+    # Еще желательно узнать, сколько всего было задач
+    text_table = "\n".join(list(map(lambda x: ",".join(x), table)))
+    return text_table
 
 
 # # Создаем таблицу в базе данных

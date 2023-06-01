@@ -156,10 +156,17 @@ async def delete_instances_id(instance_id: str):
     return {}
 
 
+from fastapi.responses import StreamingResponse
+from io import StringIO
+
+
 @router.get("/instances/{instance_id}/table")
 async def get_instances_id_table(instance_id: str):
     # Получить таблицу?
-    return {}
+    table = db.gen_csv_table(instance_id)
+    buffer = StringIO(table)
+
+    return StreamingResponse(buffer, media_type="text/csv")
 
 
 @router.get("/instances/{instance_id}/data")

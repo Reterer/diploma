@@ -46,7 +46,9 @@
                         </div>
                         <div>
                             <button type="button" class="btn btn-sm btn-secondary m-1">Выгрузить материалы</button>
-                            <button type="button" class="btn btn-sm btn-secondary m-1">Выгрузить таблицу</button>
+                            <button type="button" class="btn btn-sm btn-secondary m-1"
+                                v-on:click="loadTable(instance.id)">Выгрузить
+                                таблицу</button>
                             <button type="button" class="btn btn-sm btn-secondary m-1">Подробнее</button>
                             <button type="button" class="btn btn-sm btn-danger m-1">Удалить</button>
                         </div>
@@ -319,6 +321,12 @@ export default {
                     this.new_instance = {}
                 })
         },
+        loadTable(instance_id) {
+            console.log(instance_id)
+            axios.get('/admin/instances/' + instance_id + '/table').then(res => {
+                console.log(res)
+            })
+        }
     },
     beforeMount() {
         this.get_templates();
