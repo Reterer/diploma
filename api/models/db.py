@@ -56,6 +56,10 @@ class Generator(Base):
     name = Column(String, nullable=False)
 
 
+def get_generators():
+    return session.query(Generator).all()
+
+
 class InputTemplateTaskBlock(BaseModel):
     name: str
     config: str
@@ -184,6 +188,7 @@ def create_tasks(user: User, instance_id: int):
     instance = session.query(Instance).filter(Instance.id == instance_id).first()
     # Нужно найти блоки задач
     blokcs = get_template_blocks_by_template_id(instance.template_id)
+    print("GENERATE BLOCKS", blokcs)
     # Нужно сгенерировать задачи
     instance_tasks = []
     num = 0
@@ -213,11 +218,12 @@ def create_tasks(user: User, instance_id: int):
 
 
 def get_task_block_list(user: User, instance_id: int):
+    print("get_task_block", user.id, instance_id)
     res = (
         session.query(InstanceTask, TemplateTaskBlock)
         .join(TemplateTaskBlock)
         .filter(
-            InstanceTask.user_id == user.id and InstanceTask.instance_id == instance_id
+            InstanceTask.user_id == user.id, InstanceTask.instance_id == instance_id
         )
         .all()
     )
@@ -299,6 +305,7 @@ def gen_csv_table(instance_id: int):
 # session.add(
 #     User(username="test2", hashed_password="test", role="student", full_name="Тест 2")
 # )
-# session.add(Generator(name="Текстовый генератор"))
+# session.add(Generator(name="Выборка тестовых из вопросов"))
+# session.add(Generator(name="Инварианты графа"))
 # # Фиксация изменений в базе данных
 # session.commit()

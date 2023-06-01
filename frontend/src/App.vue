@@ -1,9 +1,16 @@
-<script setup>
+<script>
 import { RouterLink, RouterView } from 'vue-router'
+// import InvGraph from '../src/components/generators/inv_graph.vue'
+// export default {
+//   components: {
+//     InvGraph,
+//   },
+// }
 </script>
 
 <template>
   <RouterView />
+  <!-- <InvGraph /> -->
 </template>
 
 <style scoped>

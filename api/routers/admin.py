@@ -181,16 +181,17 @@ async def get_instances_id_data(instance_id: str):
 @router.get("/generators")
 async def get_generators():
     # Получить список генераторов
-    return {}
+    generators = db.get_generators()
+    return generators
 
 
-@router.post("/generators")
-async def post_generators():
-    # загрузить новый генератор
-    return {}
+# @router.post("/generators")
+# async def post_generators():
+#     # загрузить новый генератор
+#     return {}
 
 
-@router.delete("/generators/{generator_id}")
-async def delete_generators_id(generator_id: str):
-    # загрузить новый генератор
-    return {}
+# @router.delete("/generators/{generator_id}")
+# async def delete_generators_id(generator_id: str):
+#     # загрузить новый генератор
+#     return {}

@@ -10,7 +10,7 @@ router = APIRouter(
 
 # AUTH ----------------------------------
 # TODO нужно сделать норм авторизацию
-user = db.get_user("test1")
+user = db.get_user("test2")
 
 # TESTING -------------------------------
 
@@ -32,15 +32,17 @@ import json
 
 @router.get("/test/{test_id}", response_model=GetTest)
 async def get_test(test_id: str):
+    print(f"get tasks {test_id}")
     # Получение информации о тесте
     test = db.get_test(test_id)
+    print(test)
     # Получение списка задач
     res = db.get_task_block_list(user, test_id)
+    print(res)
     # Если список задач для данного пользователя пустой, то создать его
     if len(res) == 0:
         db.create_tasks(user, test_id)
         res = db.get_task_block_list(user, test_id)
-
     # Оставим только нужную информацию
     items = [
         GetTest.Task(

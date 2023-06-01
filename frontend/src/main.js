@@ -10,8 +10,11 @@ import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 // import VueTreeList from 'vue-tree-list'
 
+import VNetworkGraph from "v-network-graph"
+
 const app = createApp(App)
 app.use(router)
+app.use(VNetworkGraph)
 app.component('VueDatePicker', VueDatePicker)
 // app.use(VueTreeList)
 app.mount('#app')

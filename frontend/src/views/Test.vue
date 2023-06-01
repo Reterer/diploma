@@ -30,7 +30,8 @@
                 <div class="tab-content py-3" id="myTabContent">
                     <div v-for="item in items" :key="'item_div_' + item.id" class="tab-pane fade container"
                         :class="{ 'active show': isActive(item.id) }" :id="'item_div_' + item.id">
-                        <Sample :item="item" @answered="saveAnswer" />
+                        <Sample v-if="item.generator_id == 1" :item="item" @answered="saveAnswer" />
+                        <InvGraph v-if="item.generator_id == 2" :item="item" @answered="saveAnswer" />
                     </div>
                 </div>
             </div>
@@ -41,11 +42,13 @@
 <script>
 import { compile } from 'vue';
 import Sample from '../components/generators/sample.vue'
+import InvGraph from '../components/generators/inv_graph.vue'
 import axios from 'axios';
 
 export default {
     components: {
-        Sample
+        Sample,
+        InvGraph,
     },
     data() {
         return {

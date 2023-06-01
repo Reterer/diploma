@@ -120,7 +120,7 @@
                                                 id="floatingInput" placeholder="Название Группы заданий">
                                             {{ block.selected }}
                                             <select class="form-select mb-3" aria-label="Default select example"
-                                                v-model="block.selected">
+                                                v-model="block.generator_id">
                                                 <option selected>Выбрать генератор</option>
                                                 <option v-for=" generator  in  generators " :value="generator.id">{{
                                                     generator.name }}</option>
@@ -266,7 +266,11 @@ export default {
                 .get('/admin/instances')
                 .then(response => { this.instances = response.data; console.log(response.data) });
         },
-
+        get_generators() {
+            axios
+                .get('/admin/generators')
+                .then(response => { this.generators = response.data; console.log(response.data) });
+        },
         createTemplateRemoveBlock(block) {
             let indexToRemove = this.new_template.blocks.findIndex(b => b.name === block.name);
             this.new_template.blocks.splice(indexToRemove)
@@ -333,6 +337,7 @@ export default {
         // }
     },
     beforeMount() {
+        this.get_generators();
         this.get_templates();
         this.get_instances();
     }
