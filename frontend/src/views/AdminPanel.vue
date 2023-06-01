@@ -46,9 +46,9 @@
                         </div>
                         <div>
                             <button type="button" class="btn btn-sm btn-secondary m-1">Выгрузить материалы</button>
-                            <button type="button" class="btn btn-sm btn-secondary m-1"
-                                v-on:click="loadTable(instance.id)">Выгрузить
-                                таблицу</button>
+                            <a type="button" class="btn btn-sm btn-secondary m-1" target=”_blank”
+                                :href="'http://127.0.0.1:5000/admin/instances/' + instance.id + '/table'">Выгрузить
+                                таблицу</a>
                             <button type="button" class="btn btn-sm btn-secondary m-1">Подробнее</button>
                             <button type="button" class="btn btn-sm btn-danger m-1">Удалить</button>
                         </div>
@@ -251,7 +251,7 @@ export default {
                 name: "",
                 template_id: 0,
                 start_time: 0,
-                duration: 0,
+                duration: "01:30",
             }
         }
     },
@@ -321,12 +321,16 @@ export default {
                     this.new_instance = {}
                 })
         },
-        loadTable(instance_id) {
-            console.log(instance_id)
-            axios.get('/admin/instances/' + instance_id + '/table').then(res => {
-                console.log(res)
-            })
-        }
+        // loadTable(instance_id) {
+        //     console.log(instance_id)
+        //     axios({
+        //         url: '/admin/instances/' + instance_id + '/table',
+        //         method: 'GET',
+        //         responseType: 'blob', // Important
+        //     }).then((response) => {
+        //         FileDownload(response.data, 'report.csv');
+        //     });
+        // }
     },
     beforeMount() {
         this.get_templates();

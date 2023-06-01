@@ -10,7 +10,7 @@ router = APIRouter(
 
 # AUTH ----------------------------------
 # TODO нужно сделать норм авторизацию
-user = db.get_user("test2")
+user = db.get_user("test1")
 
 # TESTING -------------------------------
 

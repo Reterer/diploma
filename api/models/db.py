@@ -168,7 +168,7 @@ import json
 
 def generate_tasks(block: TemplateTaskBlock):
     # Как это происходит. У нас есть список генераторов.
-    gen = generators.GENERATOR_LIST[block.generator_id]
+    gen = generators.GENERATOR_LIST[block.generator_id - 1]
     # Парсинг текстового json в dict
     config = json.loads(block.config)
     # Непосредственно сама генерация задач
@@ -230,10 +230,18 @@ def add_answer_task(user: User, instance_task_id: int, answer: str):
         .filter(InstanceTask.id == instance_task_id)
         .update({InstanceTask.answer_data: answer})
     )
+    session.commit()
 
 
-def check_task(task: InstanceTask):
-    return 0
+def check_task(task: InstanceTask, generator_id: int = 1):
+    # Нужно взять нужный генератор
+    gen = generators.GENERATOR_LIST[generator_id - 1]
+    public = json.loads(task.public_data)
+    secret = json.loads(task.secret_data)
+    answer = json.loads(task.answer_data)
+    # Получить скор
+    score = gen.check_task(public, secret, answer)
+    return score
 
 
 def gen_csv_table(instance_id: int):
@@ -244,6 +252,7 @@ def gen_csv_table(instance_id: int):
         .filter(InstanceTask.instance_id == instance_id)
         .all()
     )
+    print(instance_id)
     # Cделать dict user: tasks
     tasks_by_users = dict()
     max_number = 0
@@ -290,5 +299,6 @@ def gen_csv_table(instance_id: int):
 # session.add(
 #     User(username="test2", hashed_password="test", role="student", full_name="Тест 2")
 # )
+# session.add(Generator(name="Текстовый генератор"))
 # # Фиксация изменений в базе данных
 # session.commit()

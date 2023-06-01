@@ -17,6 +17,7 @@ class Sample(BaseGenerator):
     def check_task(task: dict, secret: dict, answer: dict):
         score = 0
         for check in secret:
+            print(check, answer, check in answer)
             if check in answer:
                 score += 1
         score /= len(secret)
