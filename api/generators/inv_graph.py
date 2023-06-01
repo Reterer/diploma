@@ -1,11 +1,34 @@
 from .base import BaseGenerator
 import random
 
-# import networkx as nx
+import networkx as nx
 
 
 class InvGraph(BaseGenerator):
     def generate_tasks(config: dict):
+        # task_count = config["task_count"]
+
+        # min_v = config["min_v"]
+        # max_v = config["max_v"]
+
+        # min_e = config["min_v"]
+        # max_e = config["max_v"]
+
+        # min_c = config["min_v"]
+        # max_c = config["max_v"]
+
+        # def gen_task():
+        #     v = random.randint(min_v, max_v)
+        #     e = random.randint(min_e, max_e)
+        #     G = nx.gnm_random_graph(v, e)
+
+        #     compo = nx.algorithms.components.number_connected_components(G)
+        #     while min_c > compo or max_c < compo:
+        #         G = nx.gnm_random_graph(v, e)
+        #         compo = nx.algorithms.components.number_connected_components(G)
+
+        #     return G
+
         public = [
             {
                 "nodes": {
