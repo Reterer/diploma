@@ -1,5 +1,5 @@
 <template>
-    <v-network-graph class="graph" :nodes="item.public_data.nodes" :edges="item.public_data.edges" :configs="configs">
+    <v-network-graph class="graph" :nodes="nodes" :edges="edges" :configs="configs">
         <template #override-node-label="{
             nodeId, scale, text, x, y, config, textAnchor, dominantBaseline
         }">
@@ -41,15 +41,25 @@ export default {
     data() {
         return {
             nodes: {
-                node1: { name: "Node 1" },
-                node2: { name: "Node 2" },
-                node3: { name: "Node 3" },
-                node4: { name: "Node 4" },
+                1: { name: "1" },
+                2: { name: "2" },
+                3: { name: "3" },
+                4: { name: "4" },
+                5: { name: "5" },
+                6: { name: "6" },
+                7: { name: "7" },
+                8: { name: "8" },
             },
             edges: {
-                edge1: { source: "node1", target: "node2" },
-                edge2: { source: "node2", target: "node3" },
-                edge3: { source: "node3", target: "node4" },
+                1: { source: 1, target: 2 },
+                4: { source: 1, target: 3 },
+                2: { source: 2, target: 3 },
+                3: { source: 2, target: 4 },
+                5: { source: 2, target: 5 },
+                6: { source: 3, target: 4 },
+                7: { source: 6, target: 7 },
+                8: { source: 7, target: 8 },
+                9: { source: 8, target: 6 },
             },
             configs: vNG.defineConfigs({
                 view: {

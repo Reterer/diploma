@@ -10,8 +10,7 @@ class Sample(BaseGenerator):
         selected_tasks = random.sample(tasks, task_count)
         secret = [task["answer"] for task in selected_tasks]
         for i in range(len(selected_tasks)):
-            # selected_tasks[i].pop("answer")
-            pass
+            selected_tasks[i].pop("answer")
         return selected_tasks, secret
 
     def check_task(task: dict, secret: dict, answer: dict):

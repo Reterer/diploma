@@ -45,7 +45,7 @@
                             <div class="m-1 badge text-bg-secondary">Длительность: {{ instance.duration }}</div>
                         </div>
                         <div>
-                            <button type="button" class="btn btn-sm btn-secondary m-1">Выгрузить материалы</button>
+                            <!-- <button type="button" class="btn btn-sm btn-secondary m-1">Выгрузить материалы</button> -->
                             <a type="button" class="btn btn-sm btn-secondary m-1" target=”_blank”
                                 :href="'http://127.0.0.1:5000/admin/instances/' + instance.id + '/table'">Выгрузить
                                 таблицу</a>
@@ -83,7 +83,7 @@
                                 <div class="cs-form">
                                     <input type="time" class="form-control" v-model="new_instance.duration" />
                                 </div>
-                                {{ new_instance }}
+                                <!-- {{ new_instance }} -->
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
@@ -100,24 +100,26 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="createTemplateModalLabel">{{ new_template.name }}
-                                </h1>
+                                <!-- <h1 class="modal-title fs-5" id="createTemplateModalLabel">{{ new_template.name }}
+                                </h1> -->
+                                <input v-model="new_template.name" type="text" class="form-control" id="floatingInput"
+                                    placeholder="Название шаблона">
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="">
-                                <input v-model="new_template.name" type="text" class="form-control" id="floatingInput"
-                                    placeholder="Название шаблона">
+
                                 <button type="button" class="btn btn-sm btn-secondary m-3"
                                     @click="createTemplateAddBlock()"> Добавить блок задач </button>
                             </div>
                             <div>
                                 <div class=" modal-body">
-                                    <div class="card" v-for=" block  in   new_template.blocks  "
+                                    <div class="card mb-3" v-for=" block  in   new_template.blocks  "
                                         :key="'block_' + block.block_number">
-                                        <h5 class="card-header">{{ block.name }}</h5>
+                                        <!-- <h5 class="card-header">{{ block.name }}</h5> -->
+                                        <input v-model="block.name" type="text" class="form-control mb-3" id="floatingInput"
+                                            placeholder="Название блока задач">
                                         <div class="card-body">
-                                            <input v-model="block.name" type="text" class="form-control mb-3"
-                                                id="floatingInput" placeholder="Название Группы заданий">
+
                                             {{ block.selected }}
                                             <select class="form-select mb-3" aria-label="Default select example"
                                                 v-model="block.generator_id">
@@ -130,7 +132,7 @@
                                                     генератора:</label>
                                                 <input class="form-control" type="file"
                                                     @change="createtemplateReadFile($event.target.files[0], block)">
-                                                Текст для отладки: {{ block.config }}
+                                                <!-- Текст для отладки: {{ block.config }} -->
                                             </div>
                                             <button type="button" class="btn btn-sm btn-danger m-1"
                                                 @click="createTemplateRemoveBlock(block)">Удалить</button>
